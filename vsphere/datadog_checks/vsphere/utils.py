@@ -125,7 +125,7 @@ def should_collect_per_instance_values(metric_name, resource_type):
 
 def get_mapped_instance_tag(metric_name):
     """When collecting per-instance metric, the `instance` tag can mean a lot of different things. The meaning of the
-    tag cannot be guessed by looking at the api results and has to be infered using documentation or experience.
+    tag cannot be guessed by looking at the api results and has to be inferred using documentation or experience.
     This method acts as a utility to map a metric_name to the meaning of its instance tag.
     TODO: More
     """
