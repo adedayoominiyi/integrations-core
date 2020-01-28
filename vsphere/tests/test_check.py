@@ -81,3 +81,33 @@ def test_external_host_tags(aggregator, realtime_instance):
 
     check.set_external_tags = MagicMock()
     check.submit_external_host_tags()
+
+
+def test_aws(aggregator):
+    run_check(aggregator, True)
+    run_check(aggregator, False)
+    run_check(aggregator, True)
+    run_check(aggregator, False)
+    run_check(aggregator, True)
+    run_check(aggregator, False)
+    1/0
+
+
+def run_check(aggregator, collect_instance_values):
+    aggregator.reset()
+    instance = {
+        'host': 'aws.vcenter.localdomain',
+        'username': 'administrator@vsphere.local',
+        'password': 'vSpherer0cks!',
+        'collection_level': 4,
+        'collection_type': 'both',
+        'use_legacy_check_version': False,
+        'ssl_verify': False,
+    }
+    check = VSphereCheck('vsphere', {}, [instance])
+    check.collect_instance_values = collect_instance_values
+    check.initiate_api_connection()
+    check.check(instance)
+    times = aggregator._metrics['datadog.vsphere.query_metrics.time']
+    total_time = sum(m.value for m in times)
+    print("TOTAL query_metrics.time instance={} {}".format(collect_instance_values, total_time))

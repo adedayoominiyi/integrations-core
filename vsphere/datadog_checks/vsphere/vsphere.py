@@ -216,6 +216,7 @@ class VSphereCheck(AgentCheck):
                     value /= 100.0
 
                 tags = []
+                # print("{}, {}, {}, {}".format(metric_name, result.id.instance, value, mor_props['tags']))
                 if should_collect_per_instance_values(metric_name, resource_type):
                     instance_tag_key = get_mapped_instance_tag(metric_name)
                     instance_tag_value = result.id.instance or 'none'
@@ -245,6 +246,7 @@ class VSphereCheck(AgentCheck):
         """
         t0 = Timer()
         metrics_values = self.api.query_metrics(query_specs)
+        # print("Duration: ", t0.total())
         self.histogram('datadog.vsphere.query_metrics.time', t0.total(), tags=self.config.base_tags, raw=True)
         return metrics_values
 
@@ -255,7 +257,8 @@ class VSphereCheck(AgentCheck):
             metric_ids = []
             for counter_key, metric_name in iteritems(counters):
                 instance = ""
-                if should_collect_per_instance_values(metric_name, resource_type):
+                # if should_collect_per_instance_values(metric_name, resource_type):
+                if self.collect_instance_values:
                     instance = "*"
                 metric_ids.append(vim.PerformanceManager.MetricId(counterId=counter_key, instance=instance))
 

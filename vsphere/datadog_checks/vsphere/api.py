@@ -3,6 +3,7 @@
 # Licensed under Simplified BSD License (see LICENSE)
 import functools
 import ssl
+import time
 
 from pyVim import connect
 from pyVmomi import vim, vmodl
